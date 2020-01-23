@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 exports.home = (req,res) => {
   res.send("Wellcome to API projek user")
@@ -30,4 +31,21 @@ exports.hapusUser = async (req,res) => {
 	const {id} = req.params
 	const status = await User.remove({_id : id})
 	res.send(JSON.stringify({ "status" : 200, "error" : null, "response" : status}))
+}
+
+exports.getToken = async (req,res) => {
+  let { username,password } = req.body
+  const cek = await User.findOne({username : username, password : password})
+  if (cek != null) {
+    const user = {
+      username : cek.username,
+      password : cek.password
+    }
+
+    jwt.sign({user}, 'secretkey', (err,token) => {
+      res.send(JSON.stringify({"status" : 200, "error" : null, "token" : token}))
+    })
+  } else {
+    res.sendStatus(403)
+  }
 }
