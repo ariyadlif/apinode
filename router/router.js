@@ -17,4 +17,7 @@ module.exports = app => {
 	//get token
 	app.post('/token', userController.getToken)
 
+	//api test
+	// app.post('apitest', userController.apiTest)
+
 }
